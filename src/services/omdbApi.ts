@@ -2,23 +2,17 @@ import axios from 'axios';
 import type { SearchResponse, MovieDetail } from '../types/movie';
 
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
-const BASE_URL = import.meta.env.VITE_OMDB_API_URL || 'https://www.omdbapi.com';
+const BASE_URL = import.meta.env.VITE_OMDB_API_URL || 'http://www.omdbapi.com';
 
-// Use Cloudflare Worker proxy in production to avoid CORS issues
-// In development, use direct API calls
-const isProduction = import.meta.env.PROD;
-const API_ENDPOINT = isProduction ? '/api' : BASE_URL;
-
-// Validate that API key is configured (only for development)
-if (!isProduction && !API_KEY) {
+if (!API_KEY) {
   throw new Error(
     'VITE_OMDB_API_KEY is not defined. Please create a .env file with your OMDB API key.'
   );
 }
 
 const apiClient = axios.create({
-  baseURL: API_ENDPOINT,
-  params: isProduction ? {} : {
+  baseURL: BASE_URL,
+  params: {
     apikey: API_KEY,
   },
 });
